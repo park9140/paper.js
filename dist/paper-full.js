@@ -1,5 +1,5 @@
 /*!
- * Paper.js v0.11.5 - The Swiss Army Knife of Vector Graphics Scripting.
+ * Paper.js v0.11.5-11.5-image-import-fix - The Swiss Army Knife of Vector Graphics Scripting.
  * http://paperjs.org/
  *
  * Copyright (c) 2011 - 2016, Juerg Lehni & Jonathan Puckey
@@ -9,7 +9,7 @@
  *
  * All rights reserved.
  *
- * Date: Thu Oct 5 16:16:29 2017 +0200
+ * Date: Thu Mar 1 23:11:14 2018 +0000
  *
  ***
  *
@@ -778,7 +778,7 @@ var PaperScope = Base.extend({
 		}
 	},
 
-	version: "0.11.5",
+	version: "0.11.5-11.5-image-import-fix",
 
 	getView: function() {
 		var project = this.project;
@@ -14385,9 +14385,8 @@ new function() {
 			raster.on('load', function() {
 				var size = getSize(node);
 				this.setSize(size);
-				var center = this._matrix._transformPoint(
-						getPoint(node).add(size.divide(2)));
-				this.translate(center);
+				var center = getPoint(node).add(size.divide(2));
+				this._matrix.append(new Matrix(1, 0, 0, 1, center.x, center.y));
 			});
 			return raster;
 		},
