@@ -183,3 +183,30 @@ if (!isNode) {
             { expectError: true });
     });
 }
+
+test('Import SVG path with skipped arc', function() {
+    var attrs = {
+        d: "M50,50 h50 v50 h-50 v-50 M100,100 A50 50 0,1,0 100,100z A50,50 0,1,0 100,250z"
+    };
+    var imported = paper.project.importSVG(
+        createSVG('path', attrs),
+        { expandShapes: true });
+
+    var path = new Path();
+    path.moveTo(50, 50);
+    path.lineBy(50, 0);
+    path.lineBy(0, 50);
+    path.lineBy(-50, 0);
+    path.lineBy(0, -50);
+
+    equals(imported.children[0], path);
+    equals(imported.children[1].pathData, 'M100,100z');
+
+    var arc = new Path.Arc(
+        new Point(100,100),
+        new Point(25, 175),
+        new Point(100, 250));
+    arc.closed = true;
+
+    equals(imported.children[2], arc);
+});
